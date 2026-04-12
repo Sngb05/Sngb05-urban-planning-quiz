@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>도시계획실습 시험 대비 퀴즈</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero__copy">
+        <p class="eyebrow">Urban Planning Practice / Mock Exam</p>
+        <h1>도시계획실습<br>실전 대비 퀴즈</h1>
+        <p class="hero__text">
+          PDF 본문과 핵심 필기 흐름을 바탕으로 만든 객관식, 단답형, 서술형 문제은행입니다.
+          브라우저에서 바로 열고, 정답 확인 배너와 함께 다음 문제로 이어서 학습할 수 있습니다.
+        </p>
+      </div>
+      <div class="hero__stats">
+        <div class="stat-card">
+          <span class="stat-card__label">시험 시간</span>
+          <strong class="stat-card__value">10:00 - 11:15</strong>
+          <span class="stat-card__sub">75분 실전 타이머 제공</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card__label">문항 구성</span>
+          <strong class="stat-card__value" id="bankCount">로딩 중...</strong>
+          <span class="stat-card__sub">객관식 + 단답형 + 서술형</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel panel--setup" id="setupPanel">
+        <div class="panel__head">
+          <h2>시험 세팅</h2>
+          <p>원하는 형식과 범위를 고르면 즉시 시작됩니다.</p>
+        </div>
+
+        <div class="setup-grid">
+          <div class="setup-group">
+            <h3>모드</h3>
+            <div class="chip-row" id="modeChips"></div>
+          </div>
+
+          <div class="setup-group">
+            <h3>문항 형식</h3>
+            <div class="toggle-grid" id="typeToggles"></div>
+          </div>
+
+          <div class="setup-group">
+            <h3>주차 범위</h3>
+            <div class="toggle-grid" id="weekToggles"></div>
+          </div>
+
+          <div class="setup-group">
+            <h3>출제 방식</h3>
+            <label class="switch">
+              <input type="checkbox" id="shuffleToggle" checked>
+              <span>문항 순서 섞기</span>
+            </label>
+            <label class="switch">
+              <input type="checkbox" id="repeatWrongToggle" checked>
+              <span>오답노트 저장</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setup-summary" id="setupSummary"></div>
+
+        <div class="button-row">
+          <button class="button button--primary" id="startButton">실전 시작</button>
+          <button class="button button--ghost" id="startWrongOnlyButton">오답만 다시 풀기</button>
+          <a class="button button--ghost" href="./concepts.html">PDF 개념 총정리</a>
+        </div>
+      </section>
+
+      <section class="panel panel--quiz is-hidden" id="quizPanel">
+        <div class="progress-head">
+          <div class="progress-meta">
+            <span class="progress-meta__label" id="progressLabel">0 / 0</span>
+            <h2 id="questionTitle">문제를 불러오는 중입니다.</h2>
+            <p id="questionMeta">-</p>
+          </div>
+          <div class="progress-tools">
+            <div class="timer" id="timer">연습 모드</div>
+            <button class="button button--ghost button--small" id="quitButton">중단</button>
+          </div>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="progressFill"></div>
+        </div>
+
+        <article class="question-card" id="questionCard">
+          <div class="question-card__type" id="questionType">객관식</div>
+          <div class="question-card__body">
+            <p class="question-card__prompt" id="questionPrompt"></p>
+            <div class="question-card__choices" id="questionChoices"></div>
+            <div class="question-card__input-wrap is-hidden" id="textAnswerWrap">
+              <label class="visually-hidden" for="textAnswer">답안</label>
+              <input id="textAnswer" class="text-answer" type="text" autocomplete="off" placeholder="답을 입력하세요">
+            </div>
+            <div class="question-card__input-wrap is-hidden" id="essayAnswerWrap">
+              <label class="visually-hidden" for="essayAnswer">서술 답안</label>
+              <textarea id="essayAnswer" class="essay-answer" placeholder="핵심 개념의 흐름을 적어보세요"></textarea>
+            </div>
+          </div>
+
+          <div class="question-card__actions">
+            <button class="button button--primary is-hidden" id="submitButton">정답 확인</button>
+            <a class="button button--ghost is-hidden" id="sourceLink">개념 총정리 보기</a>
+          </div>
+
+          <div class="answer-panel is-hidden" id="answerPanel">
+            <div class="answer-panel__badge" id="answerBadge">정답!</div>
+            <div class="answer-panel__body">
+              <p class="answer-panel__line"><strong>정답:</strong> <span id="answerValue"></span></p>
+              <p class="answer-panel__line" id="answerExplain"></p>
+              <p class="answer-panel__line is-hidden" id="essayFeedback"></p>
+            </div>
+            <div class="answer-panel__actions">
+              <button class="button button--primary" id="nextButton">다음 문제</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel panel--result is-hidden" id="resultPanel">
+        <div class="panel__head">
+          <h2>세션 결과</h2>
+          <p id="resultSummary">학습 결과를 정리하는 중입니다.</p>
+        </div>
+
+        <div class="result-grid">
+          <div class="result-card">
+            <span class="result-card__label">정답 수</span>
+            <strong class="result-card__value" id="resultCorrect">0</strong>
+          </div>
+          <div class="result-card">
+            <span class="result-card__label">오답 수</span>
+            <strong class="result-card__value" id="resultWrong">0</strong>
+          </div>
+          <div class="result-card">
+            <span class="result-card__label">정답률</span>
+            <strong class="result-card__value" id="resultRate">0%</strong>
+          </div>
+        </div>
+
+        <div class="review-list" id="reviewList"></div>
+
+        <div class="button-row">
+          <button class="button button--primary" id="restartButton">다시 시작</button>
+          <button class="button button--ghost" id="retryWrongButton">오답만 다시</button>
+          <a class="button button--ghost" href="./concepts.html">PDF 개념 총정리</a>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

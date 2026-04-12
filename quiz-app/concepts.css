@@ -1,0 +1,333 @@
+:root {
+  --bg: #f4ecdc;
+  --bg-grid: rgba(56, 47, 37, 0.06);
+  --paper: rgba(255, 251, 245, 0.92);
+  --paper-strong: #fffaf1;
+  --ink: #1c1e18;
+  --muted: #5e6559;
+  --accent: #c74b3f;
+  --accent-soft: rgba(199, 75, 63, 0.12);
+  --teal: #2e7067;
+  --teal-soft: rgba(46, 112, 103, 0.12);
+  --gold: #d79a22;
+  --gold-soft: rgba(215, 154, 34, 0.15);
+  --line: rgba(28, 30, 24, 0.12);
+  --shadow: 0 24px 60px rgba(83, 61, 31, 0.14);
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  color: var(--ink);
+  font-family: "Malgun Gothic", "Segoe UI Variable Text", sans-serif;
+  background:
+    linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(var(--bg-grid) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(199, 75, 63, 0.08), rgba(46, 112, 103, 0.06)),
+    var(--bg);
+  background-size: 28px 28px, 28px 28px, auto, auto;
+}
+
+.study-shell {
+  width: min(1320px, calc(100vw - 28px));
+  margin: 0 auto;
+  padding: 24px 0 56px;
+}
+
+.study-hero,
+.study-nav,
+.study-panel {
+  background: var(--paper);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.study-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  padding: 26px 28px;
+  border-radius: var(--radius-xl);
+}
+
+.study-hero__eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.study-hero h1 {
+  margin: 0;
+  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.study-hero__text {
+  margin: 16px 0 0;
+  max-width: 52rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.study-hero__actions {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.action-button--primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), #8d2a21);
+}
+
+.action-button--ghost {
+  color: var(--ink);
+  background: rgba(255, 252, 247, 0.9);
+  border-color: var(--line);
+}
+
+.study-nav {
+  position: sticky;
+  top: 10px;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 999px;
+}
+
+.study-nav a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+}
+
+.study-layout {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.study-panel {
+  padding: 24px;
+  border-radius: var(--radius-xl);
+}
+
+.section-head h2 {
+  margin: 0;
+  font-family: "Bahnschrift", "Segoe UI Variable Display", sans-serif;
+  font-size: clamp(1.45rem, 3vw, 2.1rem);
+  letter-spacing: -0.02em;
+}
+
+.section-head p {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.map-grid,
+.summary-grid,
+.compare-grid,
+.final-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.map-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.summary-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.compare-grid,
+.final-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.map-card,
+.study-card,
+.compare-card,
+.final-card,
+.timeline-card {
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 252, 247, 0.92);
+  border: 1px solid var(--line);
+}
+
+.map-card h3,
+.study-card h3,
+.compare-card h3,
+.final-card h3,
+.timeline-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.02rem;
+}
+
+.map-card p,
+.callout p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.study-card ul,
+.study-card ol,
+.compare-card ul,
+.final-card ul,
+.timeline-card ol {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.75;
+}
+
+.study-card li + li,
+.compare-card li + li,
+.final-card li + li,
+.timeline-card li + li {
+  margin-top: 6px;
+}
+
+.callout {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, rgba(46, 112, 103, 0.09), rgba(255, 252, 247, 0.92));
+}
+
+.callout strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.callout--strong {
+  background: linear-gradient(135deg, var(--accent-soft), rgba(255, 252, 247, 0.92));
+}
+
+.callout--star {
+  background: linear-gradient(135deg, var(--gold-soft), rgba(255, 252, 247, 0.92));
+}
+
+.study-table {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.study-table__row {
+  display: grid;
+  grid-template-columns: 0.95fr 2.05fr;
+  background: rgba(255, 252, 247, 0.88);
+}
+
+.study-table__row + .study-table__row {
+  border-top: 1px solid var(--line);
+}
+
+.study-table__row > div {
+  padding: 14px 16px;
+  line-height: 1.7;
+}
+
+.study-table__row--head {
+  background: rgba(199, 75, 63, 0.1);
+  font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+  .study-hero,
+  .summary-grid,
+  .map-grid,
+  .compare-grid,
+  .final-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .study-shell {
+    width: min(100vw - 14px, 1320px);
+    padding: 12px 0 28px;
+  }
+
+  .study-hero,
+  .map-grid,
+  .summary-grid,
+  .compare-grid,
+  .final-grid,
+  .study-table__row {
+    grid-template-columns: 1fr;
+  }
+
+  .study-hero,
+  .study-panel {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .study-nav {
+    position: static;
+    border-radius: 22px;
+  }
+
+  .study-nav a,
+  .action-button {
+    width: 100%;
+  }
+
+  .study-hero__actions {
+    margin-top: 6px;
+  }
+
+  .study-hero h1 {
+    font-size: 2.1rem;
+  }
+}
