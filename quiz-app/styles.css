@@ -211,6 +211,15 @@ body {
   transform: translateY(-1px);
 }
 
+.toggle-pill.is-locked {
+  opacity: 0.68;
+  cursor: not-allowed;
+}
+
+.toggle-pill.is-locked.is-active {
+  border-style: dashed;
+}
+
 .toggle-pill input {
   display: none;
 }

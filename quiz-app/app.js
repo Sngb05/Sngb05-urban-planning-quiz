@@ -9,6 +9,7 @@
   };
   const state = {
     mode: "exam",
+    scope: "all",
     selectedTypes: new Set(["mcq", "short", "essay"]),
     selectedWeeks: new Set(["2주차", "3주차", "4주차", "5주차", "6주차"]),
     shuffle: true,
@@ -23,6 +24,7 @@
     quizPanel: document.getElementById("quizPanel"),
     resultPanel: document.getElementById("resultPanel"),
     modeChips: document.getElementById("modeChips"),
+    bankScopeChips: document.getElementById("bankScopeChips"),
     typeToggles: document.getElementById("typeToggles"),
     weekToggles: document.getElementById("weekToggles"),
     shuffleToggle: document.getElementById("shuffleToggle"),
@@ -70,6 +72,7 @@
     els.bankCount.textContent = `${questionBank.length}문항`;
     applyUrlPreset();
     renderModeChips();
+    renderBankScopeChips();
     renderTypeToggles();
     renderWeekToggles();
     bindEvents();
@@ -87,6 +90,11 @@
     const mode = searchParams.get("mode");
     if (mode === "exam" || mode === "practice") {
       state.mode = mode;
+    }
+
+    const scope = searchParams.get("scope");
+    if (scope === "all" || scope === "killer") {
+      state.scope = scope;
     }
 
     const types = searchParams.get("types");
@@ -117,6 +125,22 @@
       state.saveWrongs = false;
       els.repeatWrongToggle.checked = false;
     }
+
+    enforceScopeConstraints();
+  }
+
+  function enforceScopeConstraints() {
+    if (state.scope === "killer") {
+      state.selectedTypes = new Set(["mcq"]);
+    }
+  }
+
+  function setScope(scope) {
+    state.scope = scope;
+    enforceScopeConstraints();
+    renderBankScopeChips();
+    renderTypeToggles();
+    refreshSetupSummary();
   }
 
   function bindEvents() {
@@ -166,11 +190,30 @@
     });
   }
 
+  function renderBankScopeChips() {
+    const scopes = [
+      { id: "all", label: "전체 문제", desc: "기존 문제은행 전체" },
+      { id: "killer", label: "킬러 50", desc: "고난도 객관식만" }
+    ];
+    els.bankScopeChips.innerHTML = "";
+    scopes.forEach((scope) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `chip${state.scope === scope.id ? " is-active" : ""}`;
+      button.innerHTML = `<strong>${scope.label}</strong><span>${scope.desc}</span>`;
+      button.addEventListener("click", () => {
+        setScope(scope.id);
+      });
+      els.bankScopeChips.appendChild(button);
+    });
+  }
+
   function renderTypeToggles() {
+    const isLocked = state.scope === "killer";
     renderToggleGroup(els.typeToggles, [
-      { id: "mcq", label: "객관식" },
-      { id: "short", label: "단답형" },
-      { id: "essay", label: "서술형" }
+      { id: "mcq", label: "객관식", locked: isLocked },
+      { id: "short", label: "단답형", locked: isLocked },
+      { id: "essay", label: "서술형", locked: isLocked }
     ], state.selectedTypes, renderTypeToggles);
   }
 
@@ -182,9 +225,14 @@
     target.innerHTML = "";
     items.forEach((item) => {
       const label = document.createElement("label");
-      label.className = `toggle-pill${selectedSet.has(item.id) ? " is-active" : ""}`;
+      label.className = `toggle-pill${selectedSet.has(item.id) ? " is-active" : ""}${item.locked ? " is-locked" : ""}`;
+      label.setAttribute("aria-disabled", item.locked ? "true" : "false");
       label.innerHTML = `<input type="checkbox" ${selectedSet.has(item.id) ? "checked" : ""}><span>${item.label}</span>`;
-      label.addEventListener("click", () => {
+      label.addEventListener("click", (event) => {
+        if (item.locked) {
+          event.preventDefault();
+          return;
+        }
         toggleInSet(selectedSet, item.id);
         if (selectedSet.size === 0) {
           selectedSet.add(item.id);
@@ -203,7 +251,7 @@
       return acc;
     }, {});
     els.setupSummary.textContent = [
-      `${state.mode === "exam" ? "75분 실전 모드" : "연습 모드"} · 총 ${filtered.length}문항`,
+      `${scopeLabel()} · ${state.mode === "exam" ? "75분 실전 모드" : "연습 모드"} · 총 ${filtered.length}문항`,
       `객관식 ${counts.mcq || 0} / 단답형 ${counts.short || 0} / 서술형 ${counts.essay || 0}`,
       `오답노트 ${state.saveWrongs ? "저장" : "비저장"} · 저장된 오답 ${readWrongs().length}문항`
     ].join(" | ");
@@ -444,7 +492,16 @@
   }
 
   function filterBank(bank) {
-    return bank.filter((question) => state.selectedTypes.has(question.kind) && state.selectedWeeks.has(question.week));
+    return bank.filter((question) => {
+      const matchesType = state.selectedTypes.has(question.kind);
+      const matchesWeek = state.selectedWeeks.has(question.week);
+      const matchesScope = state.scope === "killer" ? Boolean(question.isKiller) : true;
+      return matchesType && matchesWeek && matchesScope;
+    });
+  }
+
+  function scopeLabel() {
+    return state.scope === "killer" ? "킬러 50 전용" : "전체 문제";
   }
 
   function clearInputState() {

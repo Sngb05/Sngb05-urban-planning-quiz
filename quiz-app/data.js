@@ -259,7 +259,8 @@ window.buildQuestionBank = function buildQuestionBank(facts, essays) {
       prompt: question.prompt,
       answer: question.answer,
       explanation: question.explanation || question.answer,
-      options: shuffle(question.options || [])
+      options: shuffle(question.options || []),
+      isKiller: true
     });
   });
 
