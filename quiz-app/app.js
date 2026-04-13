@@ -235,15 +235,13 @@
   function renderToggleGroup(target, items, selectedSet, rerender) {
     target.innerHTML = "";
     items.forEach((item) => {
-      const label = document.createElement("label");
-      label.className = `toggle-pill${selectedSet.has(item.id) ? " is-active" : ""}${item.locked ? " is-locked" : ""}`;
-      label.setAttribute("aria-disabled", item.locked ? "true" : "false");
-      label.innerHTML = `<input type="checkbox" ${selectedSet.has(item.id) ? "checked" : ""}><span>${item.label}</span>`;
-      label.addEventListener("click", (event) => {
-        if (item.locked) {
-          event.preventDefault();
-          return;
-        }
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `toggle-pill${selectedSet.has(item.id) ? " is-active" : ""}${item.locked ? " is-locked" : ""}`;
+      button.disabled = Boolean(item.locked);
+      button.setAttribute("aria-pressed", selectedSet.has(item.id) ? "true" : "false");
+      button.textContent = item.label;
+      button.addEventListener("click", () => {
         toggleInSet(selectedSet, item.id);
         if (selectedSet.size === 0) {
           selectedSet.add(item.id);
@@ -254,7 +252,7 @@
         rerender();
         refreshSetupSummary();
       });
-      target.appendChild(label);
+      target.appendChild(button);
     });
   }
 

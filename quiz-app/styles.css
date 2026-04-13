@@ -194,12 +194,14 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  appearance: none;
   gap: 8px;
   padding: 12px 14px;
   border-radius: 999px;
   border: 1px solid var(--line);
   background: #fffdf7;
   color: var(--ink);
+  font: inherit;
   cursor: pointer;
   transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
 }
@@ -218,10 +220,6 @@ body {
 
 .toggle-pill.is-locked.is-active {
   border-style: dashed;
-}
-
-.toggle-pill input {
-  display: none;
 }
 
 .switch {
