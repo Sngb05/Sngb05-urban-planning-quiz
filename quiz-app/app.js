@@ -11,6 +11,7 @@
     mode: "exam",
     scope: "all",
     selectedTypes: new Set(["mcq", "short", "essay"]),
+    lastNonKillerTypes: new Set(["mcq", "short", "essay"]),
     selectedWeeks: new Set(["2주차", "3주차", "4주차", "5주차", "6주차"]),
     shuffle: true,
     saveWrongs: true,
@@ -105,6 +106,8 @@
       }
     }
 
+    state.lastNonKillerTypes = new Set(state.selectedTypes);
+
     const weeksParam = searchParams.get("weeks");
     if (weeksParam) {
       const nextWeeks = new Set(weeksParam.split(",").map((item) => decodeURIComponent(item.trim())));
@@ -132,10 +135,18 @@
   function enforceScopeConstraints() {
     if (state.scope === "killer") {
       state.selectedTypes = new Set(["mcq"]);
+      return;
     }
+    state.selectedTypes = new Set(state.lastNonKillerTypes.size ? state.lastNonKillerTypes : ["mcq", "short", "essay"]);
   }
 
   function setScope(scope) {
+    if (scope === state.scope) {
+      return;
+    }
+    if (scope === "killer") {
+      state.lastNonKillerTypes = new Set(state.selectedTypes);
+    }
     state.scope = scope;
     enforceScopeConstraints();
     renderBankScopeChips();
@@ -236,6 +247,9 @@
         toggleInSet(selectedSet, item.id);
         if (selectedSet.size === 0) {
           selectedSet.add(item.id);
+        }
+        if (target === els.typeToggles && state.scope !== "killer") {
+          state.lastNonKillerTypes = new Set(selectedSet);
         }
         rerender();
         refreshSetupSummary();
